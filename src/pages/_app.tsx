@@ -2,13 +2,14 @@ import { type AppType } from "next/app";
 
 import { api } from "~/utils/api";
 import { ClerkProvider } from "@clerk/nextjs";
-import "../styles/globals.css";
+
+import "~/styles/globals.css";
 
 const MyApp: AppType = ({ Component, pageProps }) => {
   return (
-    < ClerkProvider {...pageProps}>
+    <ClerkProvider {...pageProps}>
       <Component {...pageProps} />
-    </ClerkProvider >
+    </ClerkProvider>
   );
 };
 

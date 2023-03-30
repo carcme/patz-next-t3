@@ -7,12 +7,20 @@ import { api, RouterOutputs } from "~/utils/api";
 import dayjs from "dayjs";
 import relativetime from "dayjs/plugin/relativeTime";
 import { LoadingPage } from "~/components/Loading";
+import { useState } from "react";
 dayjs.extend(relativetime);
 
 const CreatePostWizard = () => {
   const { user } = useUser();
+  const [input, setInput] = useState("");
 
-  console.log(user);
+  const ctx = api.useContext();
+  const { mutate, isLoading: isPosting } = api.posts.create.useMutation({
+    onSuccess: () => {
+      setInput("");
+      void ctx.posts.getAll.invalidate();
+    },
+  });
 
   if (!user) return null;
 
@@ -25,7 +33,17 @@ const CreatePostWizard = () => {
         width={24}
         height={24}
       />
-      <input placeholder="Type some emojis" className="grow bg-transparent" />
+      <input
+        placeholder="Type some emojis"
+        className="grow bg-transparent outline-none"
+        type="text"
+        value={input}
+        onChange={(e) => setInput(e.target.value)}
+        disabled={isPosting}
+      />
+      <button disabled={isPosting} onClick={() => mutate({ content: input })}>
+        Post
+      </button>
     </div>
   );
 };
@@ -49,7 +67,7 @@ const PostView = (props: PostWithUser) => {
             post.createdAt
           ).fromNow()}`}</span>
         </div>
-        <span className="">{post.content}</span>
+        <span className="text-2xl">{post.content}</span>
       </div>
     </div>
   );
@@ -60,7 +78,7 @@ const Feed = () => {
 
   if (postsLoading) return <LoadingPage />;
 
-  if (!data) return <div>Sometjhing went wrong</div>;
+  if (!data) return <div>Something went wrong</div>;
 
   return (
     <div className="flex flex-col">
@@ -75,7 +93,7 @@ const Home: NextPage = () => {
   const { user, isLoaded: userLoaded, isSignedIn } = useUser();
 
   // start fetch asap
-  api.posts.getAll.useQuery();
+  const data = api.posts.getAll.useQuery();
 
   if (!userLoaded) return <div />;
 
@@ -96,6 +114,7 @@ const Home: NextPage = () => {
             )}
 
             {isSignedIn && <CreatePostWizard />}
+            {/* <SignOutButton /> */}
           </div>
           <Feed />
         </div>
