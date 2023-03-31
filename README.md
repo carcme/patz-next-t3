@@ -1,3 +1,5 @@
+# This is a tutorial from https://www.youtube.com/watch?v=YkOSUVzOAA4&t=7967s
+
 # Create T3 App
 
 This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3-app`.
