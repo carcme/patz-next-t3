@@ -5,10 +5,16 @@ import { ClerkProvider } from "@clerk/nextjs";
 
 import "~/styles/globals.css";
 import { Toaster } from "react-hot-toast";
+import Head from "next/head";
 
 const MyApp: AppType = ({ Component, pageProps }) => {
   return (
     <ClerkProvider {...pageProps}>
+      <Head>
+        <title>Patz Lindenhof</title>
+        <meta name="description" content="Best restaurant in Patz" />
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
       <Toaster position="bottom-center" />
       <Component {...pageProps} />
     </ClerkProvider>
