@@ -1,9 +1,7 @@
-import { SignInButton, SignOutButton, useUser } from "@clerk/nextjs";
+import { SignInButton, useUser } from "@clerk/nextjs";
 import { type NextPage } from "next";
-import Head from "next/head";
-import Link from "next/link";
 import Image from "next/image";
-import { api, RouterOutputs } from "~/utils/api";
+import { api } from "~/utils/api";
 import dayjs from "dayjs";
 import relativetime from "dayjs/plugin/relativeTime";
 import { LoadingPage, LoadingSpinner } from "~/components/Loading";
@@ -50,12 +48,14 @@ const CreatePostWizard = () => {
         type="text"
         value={input}
         onChange={(e) => setInput(e.target.value)}
-        // onKeyDown={(e) => {
-        //   e.preventDefault();
-        //   if (input !== "") {
-        //     mutate({ content: input });
-        //   }
-        // }}
+        onKeyDown={(e) => {
+          if (e.key === "Enter") {
+            e.preventDefault();
+            if (input !== "") {
+              mutate({ content: input });
+            }
+          }
+        }}
         disabled={isPosting}
       />
       {input !== "" && !isPosting && (
@@ -91,7 +91,7 @@ const Home: NextPage = () => {
   const { user, isLoaded: userLoaded, isSignedIn } = useUser();
 
   // start fetch asap
-  const data = api.posts.getAll.useQuery();
+  api.posts.getAll.useQuery();
 
   if (!userLoaded) return <div />;
 
